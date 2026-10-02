@@ -10,7 +10,7 @@
   body { background: #FFFBF7; }
   .admin-desktop-sidebar { display: flex; transform: translateX(-105%); transition: transform .22s ease; width: min(78vw, 210px) !important; }
   .nav-side-open .admin-desktop-sidebar { transform: translateX(0); }
-  .nav-edge-toggle { display: flex; position: fixed; top: 50%; transform: translateY(-50%); z-index: 100; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .nav-edge-toggle { display: flex; position: fixed; top: 90px; z-index: 100; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .nav-side-open .nav-edge-toggle { left: min(calc(78vw - 22px), 188px); }
   .nav-bottom .nav-edge-toggle { left: 0; }
   .nav-drawer-backdrop { display: none; }
@@ -224,6 +224,7 @@ const mapEstablishment = (r) => ({
   aniversarioTemplate: r.aniversario_template || DEFAULT_BIRTHDAY_TEMPLATE,
   courseProgress: Array.isArray(r.course_progress) ? r.course_progress : [],
   courseCompletedAt: r.course_completed_at || null,
+  courseAnswers: r.course_answers && typeof r.course_answers === "object" ? r.course_answers : {},
 });
 const mapReward = (r) => ({ id: r.id, nome: r.nome, custoPontos: r.custo_pontos, ativo: r.ativo });
 const mapGoal = (r) => ({ id: r.id, nome: r.nome, emoji: r.emoji || "✨", valorMeta: Number(r.valor_meta), valorAtual: Number(r.valor_atual), concluido: !!r.concluido });
@@ -365,33 +366,33 @@ const COURSE_MODULES = [
   {
     id: "financas", titulo: "Gestão Financeira", emoji: "💰",
     licoes: [
-      { id: "fin1", titulo: "Separe o dinheiro do negócio do seu", texto: "Tenha uma conta só pra receber pelos atendimentos. Assim você enxerga de verdade quanto o negócio lucra, sem misturar com suas contas pessoais. Mesmo que pareça chato no início, esse hábito sozinho já evita boa parte dos apertos financeiros." },
-      { id: "fin2", titulo: "Monte uma reserva de emergência", texto: "Guarde aos poucos até juntar de 3 a 6 meses das suas despesas fixas. Ela é o que te segura num mês mais fraco — de chuva, de gripe, de baixa movimento — sem precisar se desesperar ou entrar no vermelho. Use a aba \"Seus sonhos\", ali no Financeiro, pra começar a guardar." },
-      { id: "fin7", titulo: "Guarde uma parte, dê uma parte", texto: "Cuidar do dinheiro não é só acumular — é também saber repartir. Separe uma parte pra sua reserva, e separe outra, mesmo que pequena, pra ajudar alguém ou uma causa em que você acredita. \"Honra ao Senhor com os teus bens, e com as primícias de toda a tua renda; e se encherão fartamente os teus celeiros\" (Provérbios 3:9-10). E ainda: \"Há quem espalhe, e se lhe acrescenta ainda mais... a alma generosa prosperará\" (Provérbios 11:24-25). Administrar bem não é guardar tudo pra você — é ter a sabedoria de repartir com generosidade." },
-      { id: "fin3", titulo: "Divida o que entra em três partes", texto: "Custos fixos (aluguel, contas), custos variáveis (produtos, materiais) e pró-labore/lucro. Uma referência comum é 60% fixos, 30% variáveis, 10% pra você — mas ajuste conforme a realidade do seu negócio." },
-      { id: "fin4", titulo: "Não gaste o que ainda não recebeu", texto: "Conte como seu só o dinheiro já confirmado (pago). O que está \"aguardando confirmação\" na agenda entra como Ganhos estimados — bom pra planejar o mês, mas ainda não é caixa de verdade." },
-      { id: "fin5", titulo: "Revise seus preços de vez em quando", texto: "Se o custo de material, aluguel ou combustível subiu, o preço do serviço precisa acompanhar. Reveja a tabela de preços pelo menos a cada 6 meses — e não tenha medo de ajustar." },
-      { id: "fin6", titulo: "Tenha um pró-labore fixo", texto: "Defina um valor fixo por mês pra você mesma, em vez de tirar dinheiro aleatoriamente do caixa. Registre sempre pelo botão \"+ Pró-labore / retirada\" — isso ajuda a saber quanto realmente sobra pro negócio crescer." },
+      { id: "fin1", titulo: "Separe o dinheiro do negócio do seu", texto: "Tenha uma conta só pra receber pelos atendimentos. Assim você enxerga de verdade quanto o negócio lucra, sem misturar com suas contas pessoais. Mesmo que pareça chato no início, esse hábito sozinho já evita boa parte dos apertos financeiros.", pergunta: "Você já tem uma conta separada só pro negócio? Se não, qual seria o primeiro passo pra fazer isso essa semana?" },
+      { id: "fin2", titulo: "Monte uma reserva de emergência", texto: "Guarde aos poucos até juntar de 3 a 6 meses das suas despesas fixas. Ela é o que te segura num mês mais fraco — de chuva, de gripe, de baixa movimento — sem precisar se desesperar ou entrar no vermelho. Use a aba \"Seus sonhos\", ali no Financeiro, pra começar a guardar.", pergunta: "Quanto custaria manter o negócio rodando por um mês se as vendas caíssem? Esse é o tamanho da sua meta de reserva." },
+      { id: "fin7", titulo: "Guarde uma parte, dê uma parte", texto: "Cuidar do dinheiro não é só acumular — é também saber repartir. Separe uma parte pra sua reserva, e separe outra, mesmo que pequena, pra ajudar alguém ou uma causa em que você acredita. \"Honra ao Senhor com os teus bens, e com as primícias de toda a tua renda; e se encherão fartamente os teus celeiros\" (Provérbios 3:9-10). E ainda: \"Há quem espalhe, e se lhe acrescenta ainda mais... a alma generosa prosperará\" (Provérbios 11:24-25). Administrar bem não é guardar tudo pra você — é ter a sabedoria de repartir com generosidade.", pergunta: "Que valor (ou %) você consegue separar todo mês pra guardar, e quanto pra ajudar alguém ou uma causa?" },
+      { id: "fin3", titulo: "Divida o que entra em três partes", texto: "Custos fixos (aluguel, contas), custos variáveis (produtos, materiais) e pró-labore/lucro. Uma referência comum é 60% fixos, 30% variáveis, 10% pra você — mas ajuste conforme a realidade do seu negócio.", pergunta: "Olhando o mês passado, mais ou menos quanto foi fixo, quanto foi variável, e quanto sobrou pra você?" },
+      { id: "fin4", titulo: "Não gaste o que ainda não recebeu", texto: "Conte como seu só o dinheiro já confirmado (pago). O que está \"aguardando confirmação\" na agenda entra como Ganhos estimados — bom pra planejar o mês, mas ainda não é caixa de verdade.", pergunta: "Já aconteceu de gastar contando com um dinheiro que ainda nem tinha caído? O que pode mudar pra evitar isso?" },
+      { id: "fin5", titulo: "Revise seus preços de vez em quando", texto: "Se o custo de material, aluguel ou combustível subiu, o preço do serviço precisa acompanhar. Reveja a tabela de preços pelo menos a cada 6 meses — e não tenha medo de ajustar.", pergunta: "Quando foi a última vez que você revisou sua tabela de preços? Algum serviço está desatualizado?" },
+      { id: "fin6", titulo: "Tenha um pró-labore fixo", texto: "Defina um valor fixo por mês pra você mesma, em vez de tirar dinheiro aleatoriamente do caixa. Registre sempre pelo botão \"+ Pró-labore / retirada\" — isso ajuda a saber quanto realmente sobra pro negócio crescer.", pergunta: "Qual seria um valor de pró-labore fixo e justo pra você tirar todo mês?" },
     ],
   },
   {
     id: "pessoal", titulo: "Gestão Pessoal", emoji: "🌱",
     licoes: [
-      { id: "pes1", titulo: "Cuide da sua agenda como cuida da cliente", texto: "Reserve horário pra você também — almoço, descanso entre atendimentos, um tempo pra organizar o financeiro. Uma agenda 100% lotada de clientes, sem nenhum respiro, cansa e derruba a qualidade do atendimento com o tempo." },
-      { id: "pes2", titulo: "Aprenda a dizer não", texto: "Cliente que cancela sempre em cima da hora, que pede desconto toda vez, que exige horário fora do seu expediente — você pode (e deve) estabelecer limites. Dizer não pra isso é dizer sim pro seu negócio ser sustentável." },
-      { id: "pes3", titulo: "Descanso não é preguiça, é manutenção", texto: "Ninguém rende igual trabalhando exausta. Um dia de folga de verdade, sem responder mensagem de cliente, faz parte de manter a qualidade do seu trabalho lá na frente." },
-      { id: "pes4", titulo: "Invista em você", texto: "Cursos, um curso de atualização técnica, um equipamento melhor — são investimentos que se pagam. Separe uma parte do lucro pra isso, do mesmo jeito que separa pra reserva." },
-      { id: "pes5", titulo: "Separe tempo pra planejar, não só pra executar", texto: "Um dia cheio de atendimentos não deixa espaço pra pensar no negócio. Escolha um momento fixo na semana — mesmo que 30 minutos — só pra olhar números, agenda e decidir os próximos passos." },
+      { id: "pes1", titulo: "Cuide da sua agenda como cuida da cliente", texto: "Reserve horário pra você também — almoço, descanso entre atendimentos, um tempo pra organizar o financeiro. Uma agenda 100% lotada de clientes, sem nenhum respiro, cansa e derruba a qualidade do atendimento com o tempo.", pergunta: "Sua agenda tem algum horário só seu, de respiro, entre atendimentos? Se não, onde dá pra encaixar um?" },
+      { id: "pes2", titulo: "Aprenda a dizer não", texto: "Cliente que cancela sempre em cima da hora, que pede desconto toda vez, que exige horário fora do seu expediente — você pode (e deve) estabelecer limites. Dizer não pra isso é dizer sim pro seu negócio ser sustentável.", pergunta: "Tem algum tipo de pedido de cliente que você sabe que devia recusar, mas ainda não consegue? Qual?" },
+      { id: "pes3", titulo: "Descanso não é preguiça, é manutenção", texto: "Ninguém rende igual trabalhando exausta. Um dia de folga de verdade, sem responder mensagem de cliente, faz parte de manter a qualidade do seu trabalho lá na frente.", pergunta: "Quando foi seu último dia de folga de verdade, sem responder cliente nenhum?" },
+      { id: "pes4", titulo: "Invista em você", texto: "Cursos, um curso de atualização técnica, um equipamento melhor — são investimentos que se pagam. Separe uma parte do lucro pra isso, do mesmo jeito que separa pra reserva.", pergunta: "Que curso, equipamento ou atualização você faria primeiro se tivesse o dinheiro já separado?" },
+      { id: "pes5", titulo: "Separe tempo pra planejar, não só pra executar", texto: "Um dia cheio de atendimentos não deixa espaço pra pensar no negócio. Escolha um momento fixo na semana — mesmo que 30 minutos — só pra olhar números, agenda e decidir os próximos passos.", pergunta: "Qual dia e horário da semana você pode reservar fixo só pra olhar o negócio, sem atender ninguém?" },
     ],
   },
   {
     id: "negocio", titulo: "Gestão de Negócios", emoji: "📈",
     licoes: [
-      { id: "neg1", titulo: "Conheça sua cliente", texto: "Quem cancela muito, quem é fiel, quem faz aniversário quando — esse histórico (que o painel de Clientes já guarda pra você) é ouro. Use pra tratar cada uma de um jeito mais próximo." },
-      { id: "neg2", titulo: "Fidelize antes de sair correndo atrás de gente nova", texto: "Conquistar uma cliente nova custa mais caro (em tempo e dinheiro) do que manter uma que já confia em você. Use o programa de Fidelidade pra recompensar quem já é cliente." },
-      { id: "neg3", titulo: "Use dados a seu favor", texto: "Agenda, financeiro, taxa de cancelamento — esses números contam uma história sobre o seu negócio. Reserve um tempinho por mês pra olhar o painel e o financeiro juntos, não só o dia a dia." },
-      { id: "neg4", titulo: "Cuide da sua reputação", texto: "Confirmação de horário, pontualidade, comunicação clara — pequenos detalhes que fazem a cliente confiar e voltar. Use a confirmação automática pelo WhatsApp pra reduzir furos na agenda." },
-      { id: "neg5", titulo: "Cresça no seu ritmo", texto: "Contratar, alugar um espaço maior, comprar mais equipamento — tudo isso é ótimo, mas só quando o caixa aguenta. Cresça olhando pro que sobrou de verdade no fim do mês, não só pra vontade." },
+      { id: "neg1", titulo: "Conheça sua cliente", texto: "Quem cancela muito, quem é fiel, quem faz aniversário quando — esse histórico (que o painel de Clientes já guarda pra você) é ouro. Use pra tratar cada uma de um jeito mais próximo.", pergunta: "Você sabe dizer de cabeça quem são suas três clientes mais fiéis?" },
+      { id: "neg2", titulo: "Fidelize antes de sair correndo atrás de gente nova", texto: "Conquistar uma cliente nova custa mais caro (em tempo e dinheiro) do que manter uma que já confia em você. Use o programa de Fidelidade pra recompensar quem já é cliente.", pergunta: "O que você já faz hoje pra fazer uma cliente voltar? O que podia fazer a mais?" },
+      { id: "neg3", titulo: "Use dados a seu favor", texto: "Agenda, financeiro, taxa de cancelamento — esses números contam uma história sobre o seu negócio. Reserve um tempinho por mês pra olhar o painel e o financeiro juntos, não só o dia a dia.", pergunta: "Com que frequência você olha o painel e o financeiro: diariamente, semanalmente, quase nunca?" },
+      { id: "neg4", titulo: "Cuide da sua reputação", texto: "Confirmação de horário, pontualidade, comunicação clara — pequenos detalhes que fazem a cliente confiar e voltar. Use a confirmação automática pelo WhatsApp pra reduzir furos na agenda.", pergunta: "Alguma cliente já reclamou de atraso ou falta de confirmação? O que mudou desde então?" },
+      { id: "neg5", titulo: "Cresça no seu ritmo", texto: "Contratar, alugar um espaço maior, comprar mais equipamento — tudo isso é ótimo, mas só quando o caixa aguenta. Cresça olhando pro que sobrou de verdade no fim do mês, não só pra vontade.", pergunta: "Tem algum plano de crescer (contratar, mudar de espaço) que você está segurando até o caixa permitir?" },
     ],
   },
 ];
@@ -1071,14 +1072,6 @@ const DAILY_QUOTES = [
   { text: "Cada cliente atendido com carinho é uma semente plantada.", ref: null },
 ];
 function todaysQuote(establishmentId) {
-  const welcome = { text: "Tudo o que fizerem, façam de todo o coração, como para o Senhor.", ref: "Colossenses 3:23" };
-  const key = `sd_welcome_quote_seen_${establishmentId || "default"}`;
-  try {
-    if (!localStorage.getItem(key)) {
-      localStorage.setItem(key, "1");
-      return welcome;
-    }
-  } catch { return welcome; }
   const start = new Date(new Date().getFullYear(), 0, 0);
   const dayOfYear = Math.floor((new Date() - start) / 86400000);
   return DAILY_QUOTES[dayOfYear % DAILY_QUOTES.length];
@@ -1918,31 +1911,18 @@ function normalizeImportedPhone(value) {
     const numeric = Number(raw.replace(",", "."));
     if (Number.isFinite(numeric)) raw = numeric.toLocaleString("fullwide", { useGrouping: false, maximumFractionDigits: 0 });
   }
-  // Descarta ramal escrito no fim do telefone antes de manter só os números.
-  raw = raw.replace(/\s*(?:ramal|ext\.?|extension)\s*\d+.*$/i, "");
   let digits = raw.replace(/\D/g, "");
-  // Remove o prefixo internacional 00, usado por alguns aplicativos.
-  digits = digits.replace(/^00/, "");
-
-  // O sistema é voltado para WhatsApp brasileiro. Um número já com país
-  // tem 55 + DDD + número (12 ou 13 dígitos). Com 10 ou 11 dígitos, ainda
-  // é um telefone nacional — inclusive quando o DDD é 55 — e precisa do 55.
-  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) return digits;
-  if (digits.length === 10 || digits.length === 11) return `55${digits}`;
+  // Remove zeros usados por algumas agendas antes do código internacional.
+  digits = digits.replace(/^00(?=55)/, "");
+  // Número salvo com "0" de discagem antes do DDD (ex.: 034999703048) em vez do código do país.
+  if (digits.length === 12 && digits.startsWith("0") && !digits.startsWith("00")) digits = digits.slice(1);
+  if ((digits.length === 10 || digits.length === 11) && !digits.startsWith("55")) digits = "55" + digits;
   return digits;
 }
 
 function normalizeImportedDate(value) {
   const raw = String(value || "").trim();
   if (!raw) return null;
-  // Datas vindas diretamente do Excel podem aparecer como número serial.
-  if (/^\d{5}$/.test(raw)) {
-    const serial = Number(raw);
-    if (serial >= 1 && serial <= 80000) {
-      const d = new Date(Date.UTC(1899, 11, 30) + serial * 86400000);
-      return d.toISOString().slice(0, 10);
-    }
-  }
   if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
   if (/^\d{8}$/.test(raw)) return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
   const br = raw.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
@@ -1950,110 +1930,78 @@ function normalizeImportedDate(value) {
   return null;
 }
 
-function normalizeImportHeader(value) {
-  return String(value || "").toLowerCase().normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "").replace(/[_-]+/g, " ")
-    .replace(/\s+/g, " ").trim();
-}
-
-// Lê CSV de verdade: mantém vírgulas, ponto e vírgula e quebras de linha
-// dentro de campos entre aspas. Exportações de Google Contatos usam isso.
-function detectCsvSeparator(text) {
-  const sample = String(text || "").replace(/^\uFEFF/, "").split(/\r?\n/).slice(0, 8).join("\n");
-  const candidates = [",", ";", "\t"];
-  const countOutsideQuotes = (separator) => {
-    let count = 0, quoted = false;
-    for (let i = 0; i < sample.length; i++) {
-      if (sample[i] === '"') {
-        if (quoted && sample[i + 1] === '"') i++;
-        else quoted = !quoted;
-      } else if (!quoted && sample[i] === separator) count++;
-    }
-    return count;
-  };
-  return candidates.reduce((best, candidate) => countOutsideQuotes(candidate) > countOutsideQuotes(best) ? candidate : best, ",");
-}
-
-function parseCsvRows(text, separator = detectCsvSeparator(text)) {
-  const source = String(text || "").replace(/^\uFEFF/, "");
-  const rows = [], row = [];
-  let cell = "", quoted = false;
-  for (let i = 0; i < source.length; i++) {
-    const ch = source[i];
+function parseDelimitedLine(line, sep) {
+  const cols = [];
+  let current = "", quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
     if (ch === '"') {
-      if (quoted && source[i + 1] === '"') { cell += '"'; i++; }
+      if (quoted && line[i + 1] === '"') { current += '"'; i++; }
       else quoted = !quoted;
-    } else if (!quoted && ch === separator) {
-      row.push(cell.trim()); cell = "";
-    } else if (!quoted && (ch === "\n" || ch === "\r")) {
-      if (ch === "\r" && source[i + 1] === "\n") i++;
-      row.push(cell.trim()); cell = "";
-      if (row.some(value => String(value).trim())) rows.push(row.splice(0));
-      else row.length = 0;
-    } else cell += ch;
+    } else if (ch === sep && !quoted) {
+      cols.push(current.trim()); current = "";
+    } else current += ch;
   }
-  row.push(cell.trim());
-  if (row.some(value => String(value).trim())) rows.push(row);
-  return rows;
+  cols.push(current.trim());
+  return cols;
 }
 
-function parseContactsRows(rawRows) {
-  const rows = (rawRows || []).map(row => Array.isArray(row) ? row.map(value => String(value ?? "").trim()) : [String(row || "").trim()])
-    .filter(row => row.some(value => value));
-  if (rows.length === 0) return [];
-
-  const header = rows[0].map(normalizeImportHeader);
-  const findHeader = (matcher) => header.findIndex(matcher);
-  const iNome = findHeader(h => h === "nome" || h === "name" || h.includes("nome completo") || h.includes("full name") || h.includes("display name") || h.includes("nome do cliente"));
-  const iFirst = findHeader(h => h.includes("primeiro nome") || h.includes("first name") || h.includes("given name"));
-  const iMiddle = findHeader(h => h.includes("nome do meio") || h.includes("middle name"));
-  const iLast = findHeader(h => h.includes("sobrenome") || h.includes("last name") || h.includes("family name"));
+function parseContactsCsv(text) {
+  const clean = String(text || "").replace(/^\uFEFF/, "");
+  const lines = clean.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length === 0) return [];
+  const candidates = [";", ",", "\t"];
+  const sep = candidates.sort((a, b) => (lines[0].split(b).length - lines[0].split(a).length))[0];
+  const first = parseDelimitedLine(lines[0], sep);
+  const header = first.map(h => h.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim());
+  const iNome = header.findIndex(h => h === "nome" || h === "name" || h.includes("nome completo") || h.includes("full name") || h.includes("display name"));
+  const iFirst = header.findIndex(h => h.includes("primeiro nome") || h.includes("first name") || h.includes("given name"));
+  const iLast = header.findIndex(h => h.includes("sobrenome") || h.includes("last name") || h.includes("family name"));
   const phoneIndexes = header.map((h, i) => ({ h, i }))
-    .filter(({ h }) => /whats|telefone|fone|celular|phone|mobile|telefone principal/.test(h))
+    .filter(({ h }) => h.includes("whats") || h.includes("telefone") || h.includes("fone") || h.includes("celular") || h.includes("phone") || h.includes("mobile"))
     .map(({ i }) => i);
-  const iNasc = findHeader(h => h.includes("nasc") || h.includes("anivers") || h.includes("birthday") || h.includes("birth"));
-  const hasHeader = iNome !== -1 || iFirst !== -1 || iLast !== -1 || phoneIndexes.length > 0;
-
-  return (hasHeader ? rows.slice(1) : rows).map(cols => {
+  const iWhats = phoneIndexes[0] ?? -1;
+  const iNasc = header.findIndex(h => h.includes("nasc") || h.includes("anivers") || h.includes("birthday") || h.includes("birth"));
+  const hasHeader = iNome !== -1 || iFirst !== -1 || iLast !== -1 || iWhats !== -1;
+  const dataLines = hasHeader ? lines.slice(1) : lines;
+  return dataLines.map(line => {
+    const cols = parseDelimitedLine(line, sep);
     const importedName = hasHeader
-      ? (iNome !== -1 ? cols[iNome] : [iFirst, iMiddle, iLast].filter(i => i !== -1).map(i => cols[i]).filter(Boolean).join(" "))
+      ? (iNome !== -1 ? cols[iNome] : [iFirst !== -1 ? cols[iFirst] : "", iLast !== -1 ? cols[iLast] : ""].filter(Boolean).join(" "))
       : (cols.length > 1 ? cols[0] : "");
-    const fallbackPhone = hasHeader ? cols.find(value => normalizeImportedPhone(value).length >= 12) : (cols.length > 1 ? cols[1] : cols[0]);
     const rawPhone = hasHeader
-      ? (phoneIndexes.map(i => cols[i]).find(value => normalizeImportedPhone(value).length >= 12) || fallbackPhone || "")
-      : fallbackPhone;
+      ? (phoneIndexes.map(i => cols[i]).find(v => normalizeImportedPhone(v).length >= 10) || cols[iWhats] || cols[1])
+      : (cols.length > 1 ? cols[1] : cols[0]);
     const whatsapp = normalizeImportedPhone(rawPhone);
     return {
       // Um contato só com telefone também é válido. O nome provisório pode ser
       // editado depois, junto com a data de nascimento opcional.
-      nome: String(importedName || "").trim() || (whatsapp.length >= 12 ? `Contato ${whatsapp.slice(-4)}` : ""),
+      nome: String(importedName || "").trim() || (whatsapp ? `Contato ${whatsapp.slice(-4)}` : ""),
       whatsapp,
-      data_nascimento: hasHeader && iNasc !== -1 ? normalizeImportedDate(cols[iNasc]) : null,
+      data_nascimento: null,
     };
-  }).filter(row => row.nome && (row.whatsapp.length === 12 || row.whatsapp.length === 13));
-}
-
-function parseContactsCsv(text) {
-  return parseContactsRows(parseCsvRows(text));
+  }).filter(r => r.nome && r.whatsapp.length >= 10);
 }
 
 function parseContactsVcf(text) {
   const unfolded = String(text || "").replace(/\r?\n[ \t]/g, "");
   return unfolded.split(/BEGIN:VCARD/i).slice(1).map(block => {
     const lines = block.split(/\r?\n/);
+    const stripItemPrefix = (l) => l.replace(/^item\d+\./i, "");
     const valueOf = (prefix) => {
-      const line = lines.find(l => l.toUpperCase().startsWith(prefix));
+      const line = lines.find(l => stripItemPrefix(l).toUpperCase().startsWith(prefix));
       return line ? line.slice(line.indexOf(":") + 1).trim() : "";
     };
     const fn = valueOf("FN") || valueOf("N").split(";").filter(Boolean).reverse().join(" ");
-    const telLine = lines.find(l => /^(?:item\d+\.)?TEL(?:;|:)/i.test(l));
+    const telLines = lines.filter(l => /^TEL(?:;|:)/i.test(stripItemPrefix(l)));
+    const telLine = telLines.find(l => /pref/i.test(l)) || telLines[0];
     const tel = telLine ? telLine.slice(telLine.indexOf(":") + 1) : "";
     return {
       nome: fn.replace(/\\([,;])/g, "$1").trim(),
       whatsapp: normalizeImportedPhone(tel),
       data_nascimento: null,
     };
-  }).filter(r => r.nome && (r.whatsapp.length === 12 || r.whatsapp.length === 13));
+  }).filter(r => r.nome && r.whatsapp.length >= 10);
 }
 
 function ImportContactsModal({ onImport, onClose }) {
@@ -2073,17 +2021,11 @@ function ImportContactsModal({ onImport, onClose }) {
       try {
         let content;
         if (/\.xlsx?$/i.test(file.name)) {
-          if (!window.XLSX) throw new Error("Não consegui carregar o leitor de planilhas. Atualize a página e tente novamente.");
           const book = window.XLSX.read(reader.result, { type: "array" });
           const firstSheet = book.Sheets[book.SheetNames[0]];
-          if (!firstSheet) throw new Error("Não encontrei uma aba com contatos nessa planilha.");
-          // Em vez de converter para CSV, lê as células da planilha diretamente.
-          // Assim não perde colunas, datas ou telefones que o Excel formatou.
-          content = window.XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: "", raw: false });
+          content = window.XLSX.utils.sheet_to_csv(firstSheet);
         } else content = String(reader.result);
-        const parsed = file.name.toLowerCase().endsWith(".vcf")
-          ? parseContactsVcf(content)
-          : (/\.xlsx?$/i.test(file.name) ? parseContactsRows(content) : parseContactsCsv(content));
+        const parsed = file.name.toLowerCase().endsWith(".vcf") ? parseContactsVcf(content) : parseContactsCsv(content);
         setStage("");
         if (parsed.length === 0) {
           setError("Não encontrei telefones válidos nesse arquivo. Confira se há uma coluna de nome e uma de telefone/WhatsApp com DDD.");
@@ -2192,8 +2134,9 @@ function AddClientModal({ onAdd, onClose }) {
   }
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(36,20,25,0.5)", zIndex: 110, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
-      <Card className="pop-in" style={{ padding: 22, maxWidth: 420, width: "100%", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+    <div style={{ position: "fixed", inset: 0, background: "rgba(36,20,25,0.5)", zIndex: 50, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
+      <div className="pop-in" style={{ width: "100%", maxWidth: 420, maxHeight: "88vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+        <Card style={{ padding: 22, borderRadius: "22px 22px 0 0" }}>
           <h2 className="font-display" style={{ fontSize: 19, margin: "0 0 14px", fontWeight: 600 }}>Adicionar cliente</h2>
           <ErrorBanner message={error} onDismiss={() => setError("")} />
           <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -2206,7 +2149,8 @@ function AddClientModal({ onAdd, onClose }) {
             <textarea placeholder="Anotações / prontuário (opcional)" value={observacoes} onChange={e => setObservacoes(e.target.value)} rows={3} style={{ ...fieldStyle, resize: "vertical" }} />
             <PrimaryButton type="submit" loading={saving} disabled={!nome.trim() || !whatsapp.trim()} style={{ width: "100%", marginTop: 4 }}>Salvar cliente</PrimaryButton>
           </form>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }
@@ -2995,7 +2939,7 @@ function earningsInRange(appointments, services, start, end) {
     .reduce((sum, a) => sum + (priceMap[a.servicoId] || 0), 0);
 }
 
-function Financeiro({ data, establishment, onAdd, onUpdate, onRemove, onAddGoal, onUpdateGoal, onRemoveGoal, onToggleLesson, onIssueCertificate }) {
+function Financeiro({ data, establishment, onAdd, onUpdate, onRemove, onAddGoal, onUpdateGoal, onRemoveGoal, onToggleLesson, onSaveAnswer, onIssueCertificate }) {
   const { appointments, services, clients, transactions = [], goals = [] } = data;
   const [mode, setMode] = useState("month");
   const [section, setSection] = useState("visao");
@@ -3012,6 +2956,12 @@ function Financeiro({ data, establishment, onAdd, onUpdate, onRemove, onAddGoal,
   const GOAL_EMOJIS = ["✨", "🎯", "✈️", "🏠", "💅", "🚗", "🎓", "💍"];
   const [openModuleId, setOpenModuleId] = useState(null);
   const [openLessonId, setOpenLessonId] = useState(null);
+  const [answerDraft, setAnswerDraft] = useState("");
+  const [savingAnswer, setSavingAnswer] = useState(false);
+  function openLesson(lessonId) {
+    setOpenLessonId(lessonId);
+    setAnswerDraft((establishment?.courseAnswers || {})[lessonId] || "");
+  }
   const [showCertificate, setShowCertificate] = useState(false);
   const [issuingCert, setIssuingCert] = useState(false);
   const courseProgress = establishment?.courseProgress || [];
@@ -3279,6 +3229,14 @@ function Financeiro({ data, establishment, onAdd, onUpdate, onRemove, onAddGoal,
 
         if (activeLesson) {
           const done = courseProgress.includes(activeLesson.id);
+          const canComplete = answerDraft.trim().length > 0;
+          async function saveAndComplete() {
+            setSavingAnswer(true);
+            try {
+              await onSaveAnswer(activeLesson.id, answerDraft.trim());
+              if (!done) await onToggleLesson(activeLesson.id);
+            } finally { setSavingAnswer(false); }
+          }
           return (
             <div className="fade-up">
               <BackRow onBack={() => setOpenLessonId(null)} />
@@ -3286,9 +3244,22 @@ function Financeiro({ data, establishment, onAdd, onUpdate, onRemove, onAddGoal,
               <Card style={{ padding: 16, marginBottom: 14 }}>
                 <div style={{ fontSize: 13, color: COLORS.ink, lineHeight: 1.7 }}>{activeLesson.texto}</div>
               </Card>
-              <PrimaryButton onClick={() => onToggleLesson(activeLesson.id)} style={{ width: "100%", background: done ? `linear-gradient(155deg, ${COLORS.sage}, #285C3C)` : undefined }}>
-                {done ? <><Check size={15} /> Aula concluída</> : "Marcar como concluída"}
+              <Card style={{ padding: 16, marginBottom: 14, background: COLORS.bgAlt, boxShadow: "none" }}>
+                <SectionLabel>Pra refletir</SectionLabel>
+                <div style={{ fontSize: 13, color: COLORS.ink, fontWeight: 700, marginBottom: 10, lineHeight: 1.5 }}>{activeLesson.pergunta}</div>
+                <textarea
+                  value={answerDraft}
+                  onChange={e => setAnswerDraft(e.target.value)}
+                  onBlur={() => { if (answerDraft.trim()) onSaveAnswer(activeLesson.id, answerDraft.trim()); }}
+                  placeholder="Escreva sua resposta aqui..."
+                  rows={4}
+                  style={{ ...fieldStyle, background: COLORS.surface, resize: "vertical", lineHeight: 1.55 }}
+                />
+              </Card>
+              <PrimaryButton onClick={saveAndComplete} loading={savingAnswer} disabled={!canComplete && !done} style={{ width: "100%", background: done ? `linear-gradient(155deg, ${COLORS.sage}, #285C3C)` : undefined }}>
+                {done ? <><Check size={15} /> Aula concluída</> : "Salvar resposta e concluir"}
               </PrimaryButton>
+              {!canComplete && !done && <div style={{ fontSize: 11, color: COLORS.inkFaint, textAlign: "center", marginTop: 8 }}>Escreva sua resposta pra poder concluir a aula.</div>}
             </div>
           );
         }
@@ -3304,7 +3275,7 @@ function Financeiro({ data, establishment, onAdd, onUpdate, onRemove, onAddGoal,
                 {activeModule.licoes.map((l, i) => {
                   const done = courseProgress.includes(l.id);
                   return (
-                    <SelectCard key={l.id} selected={false} onClick={() => setOpenLessonId(l.id)}>
+                    <SelectCard key={l.id} selected={false} onClick={() => openLesson(l.id)}>
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <div style={{
                           width: 24, height: 24, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center",
@@ -3685,7 +3656,7 @@ function AdminApp({ data, establishment, actions, announcements, onExitToClientD
       {page === "clientes" && <Clientes data={data} onUpdateClient={actions.updateClient} onImportClients={actions.importClients} onAddClient={actions.addClient} />}
       {page === "servicos" && <Servicos data={data} onAdd={actions.addService} onUpdate={actions.updateService} onRemove={actions.removeService} />}
       {page === "fidelidade" && <Fidelidade data={data} onAddReward={actions.addReward} onUpdateReward={actions.updateReward} onRemoveReward={actions.removeReward} onRedeem={actions.redeemReward} />}
-      {page === "financeiro" && <Financeiro data={data} establishment={establishment} onAdd={actions.addTransaction} onUpdate={actions.updateTransaction} onRemove={actions.removeTransaction} onAddGoal={actions.addGoal} onUpdateGoal={actions.updateGoal} onRemoveGoal={actions.removeGoal} onToggleLesson={actions.toggleCourseLesson} onIssueCertificate={actions.issueCertificate} />}
+      {page === "financeiro" && <Financeiro data={data} establishment={establishment} onAdd={actions.addTransaction} onUpdate={actions.updateTransaction} onRemove={actions.removeTransaction} onAddGoal={actions.addGoal} onUpdateGoal={actions.updateGoal} onRemoveGoal={actions.removeGoal} onToggleLesson={actions.toggleCourseLesson} onSaveAnswer={actions.saveLessonAnswer} onIssueCertificate={actions.issueCertificate} />}
       {page === "compras" && <Compras data={data} onAdd={actions.addShoppingItem} onToggle={actions.toggleShoppingItem} onRemove={actions.removeShoppingItem} />}
       {page === "config" && <Config establishment={establishment} onSave={actions.updateEstablishment} onSignOut={onSignOut} />}
     </AdminShell>
@@ -5128,6 +5099,11 @@ export default function App() {
       const current = establishment.courseProgress || [];
       const next = current.includes(lessonId) ? current.filter(id => id !== lessonId) : [...current, lessonId];
       const [row] = await rest.update("establishments", `?id=eq.${establishment.id}`, { course_progress: next }, session.accessToken);
+      setEstablishment(mapEstablishment(row));
+    },
+    saveLessonAnswer: async (lessonId, answer) => {
+      const next = { ...(establishment.courseAnswers || {}), [lessonId]: answer };
+      const [row] = await rest.update("establishments", `?id=eq.${establishment.id}`, { course_answers: next }, session.accessToken);
       setEstablishment(mapEstablishment(row));
     },
     issueCertificate: async () => {
