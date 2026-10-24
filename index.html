@@ -2,12 +2,14 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#FFF9F5" />
 <title>Secretária Digital</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%237E2748'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='36' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
 <style>
   html, body, #root { height: 100%; margin: 0; }
-  body { background: #FFFBF7; }
+  body { background: #FFF9F5; overflow-x: hidden; }
+  #root { min-height: 100vh; min-height: 100dvh; }
   .admin-desktop-sidebar { display: flex; transform: translateX(-105%); transition: transform .22s ease; width: min(78vw, 210px) !important; }
   .nav-side-open .admin-desktop-sidebar { transform: translateX(0); }
   .nav-edge-toggle { display: flex; position: fixed; top: 90px; z-index: 100; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
@@ -41,6 +43,121 @@
     .admin-main { padding: 14px 12px 62px !important; }
     .agenda-layout { min-width: 0; }
     input, select, textarea, button { max-width: 100%; box-sizing: border-box; }
+  }
+
+
+  /* Site de entrada: mobile-first, sem carrossel lateral e com a safe area preenchida. */
+  .sd-landing {
+    min-height: 100vh; min-height: 100dvh; width: 100%; position: relative;
+    overflow-x: clip; display: flex; flex-direction: column;
+    background: linear-gradient(155deg, #FFF9F5 0%, #FBE9EC 44%, #FDF5F2 74%, #FFF9F5 100%);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: max(14px, env(safe-area-inset-bottom, 0px));
+    color: #241419;
+  }
+  .sd-landing-container { width: min(calc(100% - 48px), 1120px); margin-inline: auto; position: relative; }
+  .sd-landing-header { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding-block: 25px; }
+  .sd-landing-nav { display: flex; align-items: center; gap: 22px; }
+  .sd-landing-nav a { text-decoration: none; font-size: 13px; font-weight: 650; color: #6E5A5F; }
+  .sd-landing-login { display: inline-flex; align-items: center; gap: 3px; border: 1px solid #E3C9CD;
+    padding: 10px 17px; border-radius: 100px; color: #7E2748; background: #FFF9F7; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .sd-landing-hero { display: grid; grid-template-columns: minmax(0, 1.07fr) minmax(0, .93fr);
+    gap: clamp(25px, 4vw, 64px); align-items: center; padding: 52px 0 82px; }
+  .sd-landing-eyebrow { display: inline-flex; gap: 7px; align-items: center; color: #7E2748;
+    font-size: 10.5px; letter-spacing: .07em; font-weight: 800; margin-bottom: 20px; }
+  .sd-landing-title { font-weight: 600; font-size: clamp(35px, 4.45vw, 59px);
+    line-height: 1.13; letter-spacing: -.032em; margin: 0 0 22px; }
+  .sd-landing-title span { color: #A9365A; }
+  .sd-landing-lead { max-width: 480px; font-size: 15px; line-height: 1.78; color: #6E5A5F; margin: 0 0 26px; }
+  .sd-landing-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+  .sd-landing-secondary { display: inline-flex; gap: 7px; align-items: center; color: #7E2748; font-size: 13px;
+    font-weight: 750; text-decoration: none; padding: 8px 0; }
+  .sd-landing-microcopy { margin: 17px 0 0; color: #987B82; font-size: 11.5px; }
+  .sd-landing-preview { border: 1px solid rgba(255,255,255,.78); border-radius: 28px;
+    background: linear-gradient(145deg, #8C3455, #4F1833); padding: 17px; transform: rotate(1deg);
+    box-shadow: 0 22px 62px -27px rgba(84,19,46,.5); min-width: 0; }
+  .sd-landing-preview-top { display: flex; align-items: center; gap: 11px; color: #FFF9F8; padding: 8px 7px 18px; }
+  .sd-landing-preview-top > div:nth-child(2) { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 0; }
+  .sd-landing-preview-top strong { font-size: 12px; font-weight: 650; }
+  .sd-landing-preview-logo { width: 34px; height: 34px; border: 1px solid #D8B3C1; border-radius: 11px;
+    display: grid; place-items: center; font-family: Georgia,serif; font-size: 23px; }
+  .sd-landing-preview-kicker { font-size: 9px; letter-spacing: .07em; color: #F2CFDC; }
+  .sd-landing-preview-content { border-radius: 19px; padding: 23px; background: #FFFCFA; }
+  .sd-landing-preview-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .sd-landing-preview-heading small { color: #987B82; font-size: 9px; font-weight: 800; letter-spacing: .09em; }
+  .sd-landing-preview-heading h3 { margin: 5px 0 0; font-weight: 600; font-size: 24px; }
+  .sd-landing-preview-date { display: grid; place-items: center; width: 39px; height: 39px;
+    color: #7E2748; background: #F6E3E9; border-radius: 12px; flex-shrink: 0; }
+  .sd-landing-preview-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  .sd-landing-preview-grid > div { min-width: 0; padding: 19px 13px; border: 1px solid #F2E0E3; border-radius: 13px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 14px; background: #FFF8F7; color: #7E2748; }
+  .sd-landing-preview-grid span { font-weight: 700; color: #3D2630; font-size: 12px; }
+  .sd-landing-preview-note { display: flex; align-items: center; gap: 7px; color: #7D6870;
+    font-size: 10px; margin-top: 16px; }
+  .sd-landing-status-dot { width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; background: #4F8B61; }
+  .sd-landing-preview-caption { display: block; margin: 13px 0 3px; color: #F5DAE3; font-size: 10px; text-align: center; }
+  .sd-landing-features { padding: 45px 0 76px; scroll-margin-top: 30px; }
+  .sd-landing-section-heading { text-align: center; margin: 0 auto 26px; max-width: 620px; }
+  .sd-landing-section-kicker { color: #9B3659; font-weight: 800; font-size: 10px; letter-spacing: .095em; }
+  .sd-landing-section-heading h2, .sd-landing-plans-copy h2 { font-size: clamp(28px, 3vw, 39px);
+    font-weight: 600; line-height: 1.18; margin: 13px 0; }
+  .sd-landing-section-heading p, .sd-landing-plans-copy p { margin: 0; color: #6E5A5F; font-size: 13.5px; line-height: 1.7; }
+  .sd-landing-features-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
+  .sd-landing-feature-card { background: rgba(255,255,255,.72); border: 1px solid #F0E1E1; border-radius: 18px;
+    min-width: 0; padding: 23px; box-shadow: 0 7px 28px -23px rgba(84,19,46,.35); }
+  .sd-landing-feature-icon { background: #F6E3E9; color: #7E2748; width: 40px; height: 40px;
+    border-radius: 12px; display: grid; place-items: center; margin-bottom: 20px; }
+  .sd-landing-feature-card h3 { margin: 0 0 8px; font-size: 13.5px; font-weight: 750; }
+  .sd-landing-feature-card p { margin: 0; color: #6E5A5F; font-size: 12px; line-height: 1.65; }
+  .sd-landing-plans { background: #FFFDFB; border: 1px solid #EFDFE1; border-radius: 26px;
+    display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 35px;
+    padding: clamp(26px,4vw,55px); margin: 0 0 44px; scroll-margin-top: 25px; }
+  .sd-landing-plans-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 14px; }
+  .sd-landing-plan-placeholder { background: linear-gradient(155deg,#7E2748,#54132E); color: white;
+    border-radius: 19px; padding: 27px; min-width: 0; }
+  .sd-landing-plan-label { display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(255,255,255,.3);
+    padding: 7px 11px; border-radius: 100px; font-size: 9.5px; letter-spacing: .07em; font-weight: 800; color: #FADCE6; }
+  .sd-landing-plan-placeholder h3 { font-size: 24px; font-weight: 550; margin: 22px 0 9px; }
+  .sd-landing-plan-placeholder p { font-size: 12px; line-height: 1.7; color: #F1CDD8; margin: 0 0 20px; }
+  .sd-landing-plan-steps { display: grid; gap: 11px; }
+  .sd-landing-plan-steps span { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #FFF8FB; }
+  .sd-landing-footer { display: flex; justify-content: space-between; gap: 18px; align-items: center; margin-top: auto;
+    padding: 13px 0 14px; font-size: 11px; color: #91747E; border-top: 1px solid rgba(126,39,72,.12); }
+  .sd-landing-admin-link { border: none; background: none; font: inherit; cursor: pointer;
+    color: #7E2748; text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 800px) {
+    .sd-landing-hero { grid-template-columns: minmax(0,1fr); gap: 32px; padding: 33px 0 52px; }
+    .sd-landing-preview { width: min(100%, 490px); margin-inline: auto; transform: none; }
+    .sd-landing-features-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .sd-landing-plans { grid-template-columns: minmax(0,1fr); gap: 22px; }
+  }
+  @media (max-width: 520px) {
+    .sd-landing-container { width: calc(100% - 34px); }
+    .sd-landing-header { padding-block: 19px; }
+    .sd-landing-nav { gap: 13px; }
+    .sd-landing-nav a { font-size: 12px; }
+    .sd-landing-login { font-size: 12px; padding: 9px 12px; }
+    .sd-landing-hero { padding: 26px 0 42px; gap: 28px; }
+    .sd-landing-eyebrow { font-size: 9px; margin-bottom: 15px; }
+    .sd-landing-title { font-size: clamp(30px, 8vw, 38px); line-height: 1.15; margin-bottom: 15px; }
+    .sd-landing-lead { font-size: 13.5px; line-height: 1.65; margin-bottom: 18px; }
+    .sd-landing-microcopy { margin-top: 13px; }
+    .sd-landing-preview-content { padding: 17px; }
+    .sd-landing-preview-grid > div { padding: 15px 12px; }
+    .sd-landing-features { padding: 22px 0 48px; }
+    .sd-landing-features-grid { gap: 10px; }
+    .sd-landing-feature-card { padding: 16px 13px; border-radius: 15px; }
+    .sd-landing-feature-icon { width: 34px; height: 34px; margin-bottom: 12px; }
+    .sd-landing-feature-card h3 { font-size: 12.5px; }
+    .sd-landing-feature-card p { font-size: 11px; }
+    .sd-landing-plans { padding: 20px; border-radius: 21px; margin-bottom: 28px; }
+    .sd-landing-plan-placeholder { padding: 20px; }
+    .sd-landing-footer { flex-wrap: wrap; font-size: 10px; }
+  }
+  @media (max-width: 360px) {
+    .sd-landing-actions > button { width: 100%; }
+    .sd-landing-nav { gap: 9px; }
+    .sd-landing-title { font-size: 30px; }
   }
 
   @media print {
@@ -643,69 +760,110 @@ const fieldStyle = {
 --------------------------------------------------------- */
 function Landing({ onCreateAccount, onEnter, onSuperAdmin }) {
   const features = [
-    { icon: Calendar, label: "Agenda inteligente" },
-    { icon: MessageCircle, label: "Confirmação pelo WhatsApp" },
-    { icon: ShoppingBag, label: "Lista de compras" },
+    { icon: Calendar, title: "Agenda organizada", text: "Visualize seus atendimentos e planeje sua rotina." },
+    { icon: Users, title: "Cadastro de clientes", text: "Informações importantes sempre à mão." },
+    { icon: MessageCircle, title: "Confirmações", text: "Facilite a comunicação pelo WhatsApp." },
+    { icon: Wallet, title: "Controle financeiro", text: "Acompanhe entradas, saídas e suas metas." },
+    { icon: Award, title: "Fidelidade", text: "Valorize quem escolhe seus serviços." },
+    { icon: ShoppingBag, title: "Lista de compras", text: "Organize os itens necessários ao trabalho." },
   ];
   return (
-    <div className="font-body" style={{ minHeight: "100%", background: COLORS.heroGradient, position: "relative", overflow: "hidden" }}>
-      <div style={{
-        position: "absolute", top: -60, right: -60, width: 220, height: 220, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(255,255,255,0.5), transparent 70%)", animation: "blobFloat 9s ease-in-out infinite",
-      }} />
-      <div style={{ position: "relative", padding: "18px 20px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <div className="font-body sd-landing">
+      <header className="sd-landing-container sd-landing-header">
         <Wordmark name="Secretária Digital" size={19} />
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <button onClick={onCreateAccount} className="font-body sd-btn" style={{ background: "transparent", border: "none", cursor: "pointer", color: COLORS.ink, fontSize: 13.5, fontWeight: 650 }}>
-            Criar conta
-          </button>
-          <button onClick={onEnter} className="font-body sd-btn" style={{
-            background: `linear-gradient(155deg, ${COLORS.primary}, ${COLORS.primaryDeep})`, color: "#fff", border: "none",
-            borderRadius: 999, padding: "10px 17px", fontWeight: 700, fontSize: 13, cursor: "pointer",
-            boxShadow: "0 8px 20px -10px rgba(84,19,46,0.5)",
-          }}>
-            Entrar
-          </button>
-        </div>
-      </div>
+        <nav className="sd-landing-nav" aria-label="Navegação inicial">
+          <a href="#sd-planos">Planos</a>
+          <button type="button" onClick={onEnter} className="sd-landing-login sd-btn">Entrar <ChevronRight size={14} /></button>
+        </nav>
+      </header>
 
-      <div className="fade-up" style={{ position: "relative", padding: "44px 22px 6px" }}>
-        <div className="font-body" style={{
-          display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.72)",
-          borderRadius: 999, padding: "8px 16px 8px 12px", fontSize: 12, fontWeight: 700, color: COLORS.primary, marginBottom: 24,
-        }}>
-          <Sparkles size={13} /> A elegância que sua agenda merece
-        </div>
-
-        <h1 className="font-display" style={{ fontSize: 39, lineHeight: 1.1, fontWeight: 600, color: COLORS.ink, margin: "0 0 18px" }}>
-          A secretária inteligente do seu <span className="font-display-italic" style={{ color: COLORS.accent }}>negócio</span>.
-        </h1>
-
-        <p style={{ fontSize: 15, color: COLORS.inkSoft, lineHeight: 1.65, margin: "0 0 30px", maxWidth: 380 }}>
-          Organize agenda, clientes, serviços e confirmações pelo WhatsApp — tudo em um só lugar.
-        </p>
-
-        <PrimaryButton onClick={onEnter} style={{ padding: "16px 26px", fontSize: 15 }}>
-          Entrar
-        </PrimaryButton>
-      </div>
-
-      <div className="scrollbar-thin fade-up" style={{ position: "relative", display: "flex", gap: 10, padding: "38px 22px 40px", overflowX: "auto" }}>
-        {features.map(f => (
-          <div key={f.label} style={{
-            flexShrink: 0, display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.68)",
-            borderRadius: 14, padding: "12px 15px", border: "1px solid rgba(255,255,255,0.85)",
-          }}>
-            <f.icon size={15} color={COLORS.primary} />
-            <span className="font-body" style={{ fontSize: 12.5, fontWeight: 700, color: COLORS.ink }}>{f.label}</span>
+      <main className="sd-landing-container">
+        <section className="sd-landing-hero" aria-labelledby="sd-landing-title">
+          <div className="fade-up sd-landing-intro">
+            <div className="sd-landing-eyebrow"><Sparkles size={14} /> FEITA PARA PROFISSIONAIS DA BELEZA</div>
+            <h1 id="sd-landing-title" className="font-display sd-landing-title">
+              Mais tempo para cuidar de quem importa. <span className="font-display-italic">Menos tempo organizando.</span>
+            </h1>
+            <p className="sd-landing-lead">
+              Agenda, clientes, confirmações e gestão do seu negócio em um lugar só. Sua rotina mais leve, do seu jeito.
+            </p>
+            <div className="sd-landing-actions">
+              <PrimaryButton onClick={onCreateAccount} style={{ padding: "15px 24px", fontSize: 14.5 }}>
+                Criar minha conta <ChevronRight size={16} />
+              </PrimaryButton>
+              <a className="sd-landing-secondary" href="#sd-recursos">Conhecer recursos <ChevronRight size={15} /></a>
+            </div>
+            <p className="sd-landing-microcopy">Organização com praticidade e um toque de cuidado.</p>
           </div>
-        ))}
-      </div>
 
-      <button onClick={onSuperAdmin} aria-label="admin" className="sd-btn" style={{
-        position: "fixed", bottom: 14, right: 14, width: 10, height: 10, borderRadius: "50%",
-        background: "rgba(36,20,25,0.15)", border: "none", cursor: "pointer", padding: 0,
-      }} />
+          <div className="sd-landing-preview fade-up" aria-label="Prévia ilustrativa das áreas do painel">
+            <div className="sd-landing-preview-top">
+              <div className="sd-landing-preview-logo">S</div>
+              <div>
+                <span className="sd-landing-preview-kicker">SECRETÁRIA DIGITAL</span>
+                <strong>Seu espaço de trabalho</strong>
+              </div>
+              <Sparkles size={18} color="#B08A52" />
+            </div>
+            <div className="sd-landing-preview-content">
+              <div className="sd-landing-preview-heading">
+                <div><small>VISÃO GERAL</small><h3 className="font-display">Tudo no seu ritmo.</h3></div>
+                <div className="sd-landing-preview-date"><Calendar size={17} /></div>
+              </div>
+              <div className="sd-landing-preview-grid">
+                <div><Calendar size={20} /><span>Agenda</span></div>
+                <div><Users size={20} /><span>Clientes</span></div>
+                <div><Wallet size={20} /><span>Financeiro</span></div>
+                <div><Award size={20} /><span>Fidelidade</span></div>
+              </div>
+              <div className="sd-landing-preview-note"><span className="sd-landing-status-dot" /> Mais organização para o seu dia.</div>
+            </div>
+            <span className="sd-landing-preview-caption">Ilustração das funcionalidades do painel.</span>
+          </div>
+        </section>
+
+        <section id="sd-recursos" className="sd-landing-features" aria-labelledby="sd-recursos-title">
+          <div className="sd-landing-section-heading">
+            <span className="sd-landing-section-kicker">SIMPLES E COMPLETA</span>
+            <h2 id="sd-recursos-title" className="font-display">O que você precisa, sem complicação.</h2>
+            <p>Conheça os recursos da Secretária Digital. Todos visíveis, sem arrastar cartões para os lados.</p>
+          </div>
+          <div className="sd-landing-features-grid">
+            {features.map(feature => (
+              <div className="sd-landing-feature-card" key={feature.title}>
+                <div className="sd-landing-feature-icon"><feature.icon size={19} strokeWidth={1.8} /></div>
+                <h3>{feature.title}</h3>
+                <p>{feature.text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="sd-planos" className="sd-landing-plans" aria-labelledby="sd-planos-title">
+          <div className="sd-landing-plans-copy">
+            <span className="sd-landing-section-kicker">PENSADA PARA CRESCER COM VOCÊ</span>
+            <h2 id="sd-planos-title" className="font-display">Seu negócio evolui. A plataforma acompanha.</h2>
+            <p>Esta área está preparada para receber nossos planos e assinaturas. Quando definidos, você encontrará aqui os recursos, valores e opções de contratação.</p>
+          </div>
+          <div className="sd-landing-plans-grid">
+            <div className="sd-landing-plan-placeholder">
+              <span className="sd-landing-plan-label"><Sparkles size={14} /> EM PREPARAÇÃO</span>
+              <h3 className="font-display">Planos da Secretária Digital</h3>
+              <p>Em breve, as opções estarão disponíveis para comparação aqui mesmo.</p>
+              <div className="sd-landing-plan-steps">
+                <span><Check size={14} /> Comparar recursos</span>
+                <span><Check size={14} /> Escolher um plano</span>
+                <span><Check size={14} /> Assinar online</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="sd-landing-container sd-landing-footer">
+        <span>Secretária Digital · Feita para facilitar sua rotina.</span>
+        <button type="button" onClick={onSuperAdmin} className="sd-landing-admin-link">Área administrativa</button>
+      </footer>
     </div>
   );
 }
@@ -725,7 +883,7 @@ function LoginForm({ onLogin, onBack, onGoSignup, onForgotPassword, onResendConf
   }
 
   return (
-    <div className="font-body pop-in" style={{ minHeight: "100%", background: COLORS.heroGradient, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+    <div className="font-body pop-in" style={{ minHeight: "100dvh", background: COLORS.heroGradient, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <Card style={{ padding: 30, maxWidth: 380, width: "100%", boxShadow: COLORS.shadowLg }}>
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <Wordmark name="Secretária Digital" size={17} />
@@ -783,7 +941,7 @@ function Signup({ onCreate, onBack, onGoLogin, loading, error }) {
   const [form, setForm] = useState({ estabelecimento: "", responsavel: "", whatsapp: "", email: "", senha: "" });
 
   return (
-    <div className="font-body pop-in" style={{ minHeight: "100%", background: COLORS.heroGradient, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+    <div className="font-body pop-in" style={{ minHeight: "100dvh", background: COLORS.heroGradient, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <Card style={{ padding: 30, maxWidth: 380, width: "100%", boxShadow: COLORS.shadowLg }}>
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <Wordmark name="Secretária Digital" size={17} />
@@ -835,7 +993,7 @@ function RecoverForm({ onSend, onBack, loading, error }) {
   }
 
   return (
-    <div className="font-body pop-in" style={{ minHeight: "100%", background: COLORS.heroGradient, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+    <div className="font-body pop-in" style={{ minHeight: "100dvh", background: COLORS.heroGradient, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <Card style={{ padding: 30, maxWidth: 380, width: "100%", boxShadow: COLORS.shadowLg }}>
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <Wordmark name="Secretária Digital" size={17} />
@@ -877,7 +1035,7 @@ function ResetPasswordForm({ onReset, loading, error }) {
   }
 
   return (
-    <div className="font-body pop-in" style={{ minHeight: "100%", background: COLORS.heroGradient, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+    <div className="font-body pop-in" style={{ minHeight: "100dvh", background: COLORS.heroGradient, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <Card style={{ padding: 30, maxWidth: 380, width: "100%", boxShadow: COLORS.shadowLg }}>
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <Wordmark name="Secretária Digital" size={17} />
