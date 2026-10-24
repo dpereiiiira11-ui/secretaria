@@ -4,6 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#FFF9F5" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Secretária Digital" />
+<meta name="application-name" content="Secretária Digital" />
 <title>Secretária Digital</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%237E2748'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='36' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
 <style>
@@ -45,6 +49,109 @@
     input, select, textarea, button { max-width: 100%; box-sizing: border-box; }
   }
 
+
+
+  /* Entrada dedicada à cliente — interface acolhedora em desktop e mobile. */
+  .sd-client-login {
+    min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column;
+    background: linear-gradient(135deg, #FDF5F2 0%, #F9E9EB 62%, #FFF8F4 100%);
+    padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) max(15px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    overflow-x: clip;
+  }
+  .sd-client-login-header { display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    width: min(100%, 1100px); margin: 0 auto; padding: 22px 0 20px; }
+  .sd-client-login-brand { display: inline-flex; align-items: center; gap: 12px; min-width: 0; }
+  .sd-client-login-brand .font-display { white-space: normal !important; }
+  .sd-client-login-monogram { background: linear-gradient(145deg, #8B3253, #54132E); color: #FFE9F0; width: 38px; height: 38px;
+    display: grid; place-items: center; border-radius: 12px; font-family: Georgia, serif; font-size: 23px; flex-shrink: 0; }
+  .sd-client-login-back { display: inline-flex; align-items: center; gap: 7px; border: none; background: transparent;
+    color: #6E5A5F; font-size: 12px; font-weight: 700; padding: 8px 0; cursor: pointer; }
+  .sd-client-login-main { width: min(100%, 1100px); margin: auto; display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, .94fr); border-radius: 29px;
+    background: #FFFCFA; box-shadow: 0 26px 90px -45px rgba(84, 19, 46, .36);
+    overflow: hidden; border: 1px solid rgba(255,255,255,.8); }
+  .sd-client-login-welcome { padding: clamp(30px,5vw,67px); color: #FFF7F7;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 55px;
+    min-height: 560px; background: radial-gradient(circle at 88% 14%, rgba(255,211,227,.21), transparent 36%),
+    radial-gradient(circle at 12% 91%, rgba(207,77,116,.22), transparent 40%),
+    linear-gradient(155deg, #8B3657 0%, #6E2645 52%, #47152E 100%); position: relative; }
+  .sd-client-login-welcome:after { content: ""; position: absolute; width: 205px; height: 205px; right: -80px; top: 36%;
+    border: 1px solid rgba(255,231,238,.14); border-radius: 50%; pointer-events: none; }
+  .sd-client-login-welcome-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 750;
+    letter-spacing: .115em; color: #F7D9E3; margin-bottom: 31px; }
+  .sd-client-login-welcome h1 { font-weight: 540; font-size: clamp(39px,4.5vw,59px); line-height: 1.13;
+    max-width: 430px; letter-spacing: -.025em; margin: 0 0 20px; }
+  .sd-client-login-welcome h1 span { color: #F1B9CB; }
+  .sd-client-login-welcome-top p { max-width: 355px; font-size: 14px; line-height: 1.9; color: #F3DDE4; margin: 0; }
+  .sd-client-login-welcome-bottom { max-width: 345px; position: relative; }
+  .sd-client-login-ornament { color: #F4C6D3; font-size: 30px; margin-bottom: 8px; }
+  .sd-client-login-quote { font-size: 22px; line-height: 1.55; color: #FFF2F5; }
+  .sd-client-login-quote-rule { width: 40px; height: 1px; background: #D8AEB9; margin: 23px 0 13px; }
+  .sd-client-login-welcome-bottom > span { color: #EEC5D2; letter-spacing: .15em; font-size: 9px; font-weight: 750; }
+  .sd-client-login-content { padding: clamp(27px,5.1vw,65px) clamp(26px,5vw,62px); display: flex;
+    flex-direction: column; justify-content: center; min-width: 0; }
+  .sd-client-login-welcome-mobile { display: none; }
+  .sd-client-login-kicker { color: #A0375B; font-size: 10px; font-weight: 800; letter-spacing: .09em; margin-bottom: 12px; }
+  .sd-client-login-content h2 { color: #28171F; font-weight: 600; line-height: 1.16;
+    font-size: clamp(27px,3vw,37px); margin: 0 0 10px; }
+  .sd-client-login-content h2 span { color: #AE4566; }
+  .sd-client-login-content-top > p { font-size: 12.5px; line-height: 1.75; color: #77636A; margin: 0 0 26px; max-width: 370px; }
+  .sd-client-login-form { display: flex; flex-direction: column; gap: 17px; }
+  .sd-client-login-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .sd-client-login-field label { font-size: 12px; font-weight: 750; color: #443038; }
+  .sd-client-login-field input { border: 1px solid #EADADC; background: #FFF9F9; color: #241419;
+    border-radius: 13px; width: 100%; padding: 15px 15px; font-size: 16px; outline: none; }
+  .sd-client-login-field input:focus { background: #FFF; border-color: #9B3659; box-shadow: 0 0 0 3px rgba(155,54,89,.10); }
+  .sd-client-login-field input::placeholder { color: #AB98A0; }
+  .sd-client-login-field-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .sd-client-login-forgot { color: #8F3152; background: none; border: none; padding: 0; cursor: pointer;
+    font-weight: 700; font-size: 11px; }
+  .sd-client-login-password-wrap { position: relative; }
+  .sd-client-login-password-wrap input { padding-right: 82px; }
+  .sd-client-login-reveal { position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: transparent; color: #7E2748; border: none; padding: 8px 5px; cursor: pointer; font-size: 11px; font-weight: 750; }
+  .sd-client-login-separator { display: flex; justify-content: center; align-items: center; gap: 12px;
+    font-size: 11px; color: #97838B; margin: 24px 0 14px; }
+  .sd-client-login-separator:before, .sd-client-login-separator:after { content: ""; height: 1px; background: #EFDFE1; flex: 1; }
+  .sd-client-login-create { background: #FFF; border: 1px solid #E4C9D3; color: #7E2748;
+    border-radius: 100px; padding: 12px 16px; font-size: 12.5px; font-weight: 750; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+  .sd-client-login-shortcut { display: flex; align-items: flex-start; gap: 11px; padding: 12px 13px; margin-top: 21px;
+    background: #F9EEF0; border-radius: 12px; }
+  .sd-client-login-shortcut-icon { display: grid; place-items: center; color: #8C3656; flex-shrink: 0; margin-top: 2px; }
+  .sd-client-login-shortcut p { font-size: 10.5px; line-height: 1.6; color: #765D67; margin: 0; }
+  .sd-client-login-shortcut strong { color: #6E2645; }
+  .sd-client-login-footer { text-align: center; color: #9A818A; font-size: 10.5px; padding: 23px 0 9px; letter-spacing: .01em; }
+  .sd-client-login-footer span { color: #AC4C6C; padding: 0 6px; }
+  .sd-client-login-alert { background: #FAEFDA; color: #795610; border-radius: 13px; padding: 13px; font-size: 12px; margin-bottom: 14px; line-height: 1.6; }
+  .sd-client-login-resend { display: block; background: none; border: none; color: inherit; font-weight: 750; margin-top: 8px;
+    cursor: pointer; text-decoration: underline; padding: 0; font-size: 12px; }
+  @media (max-width: 780px) {
+    .sd-client-login-header { padding: 13px 0 17px; }
+    .sd-client-login-main { grid-template-columns: minmax(0,1fr); border-radius: 23px; max-width: 470px; }
+    .sd-client-login-welcome { min-height: auto; padding: 29px 25px 25px; gap: 0; }
+    .sd-client-login-welcome-tag { margin-bottom: 12px; font-size: 9px; }
+    .sd-client-login-welcome h1 { font-size: clamp(31px,7.7vw,40px); margin-bottom: 9px; max-width: none; }
+    .sd-client-login-welcome-top p { font-size: 12px; line-height: 1.6; max-width: 380px; }
+    .sd-client-login-welcome-bottom { display: none; }
+    .sd-client-login-content { padding: 28px 25px 27px; }
+    .sd-client-login-content h2 { font-size: 27px; }
+    .sd-client-login-content-top > p { margin-bottom: 18px; }
+    .sd-client-login-footer { padding: 19px 0 7px; }
+  }
+  @media (max-width: 380px) {
+    .sd-client-login-brand .font-display { font-size: 16px !important; }
+    .sd-client-login-back { font-size: 0; gap: 0; padding: 8px 4px; }
+    .sd-client-login-back svg { width: 19px; height: 19px; }
+    .sd-client-login-main { border-radius: 19px; }
+    .sd-client-login-welcome { padding: 23px 19px 22px; }
+    .sd-client-login-content { padding: 23px 19px 24px; }
+    .sd-client-login-welcome h1 { font-size: 30px; }
+    .sd-client-login-shortcut { margin-top: 15px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sd-client-login .pop-in { animation: none; }
+  }
 
   /* Site de entrada: mobile-first, sem carrossel lateral e com a safe area preenchida. */
   .sd-landing {
@@ -874,6 +981,7 @@ function Landing({ onCreateAccount, onEnter, onSuperAdmin }) {
 function LoginForm({ onLogin, onBack, onGoSignup, onForgotPassword, onResendConfirmation, loading, error }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
 
@@ -883,53 +991,86 @@ function LoginForm({ onLogin, onBack, onGoSignup, onForgotPassword, onResendConf
   }
 
   return (
-    <div className="font-body pop-in" style={{ minHeight: "100dvh", background: COLORS.heroGradient, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
-      <Card style={{ padding: 30, maxWidth: 380, width: "100%", boxShadow: COLORS.shadowLg }}>
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <Wordmark name="Secretária Digital" size={17} />
-          <h1 className="font-display" style={{ fontSize: 25, margin: "14px 0 5px", fontWeight: 600 }}>
-            Bem-vinda de <span className="font-display-italic">volta</span>
-          </h1>
-          <p style={{ fontSize: 13, color: COLORS.inkSoft, margin: 0 }}>Entre com o e-mail e senha do seu painel.</p>
-        </div>
+    <div className="font-body sd-client-login">
+      <header className="sd-client-login-header">
+        <div className="sd-client-login-brand"><span className="sd-client-login-monogram">S</span><Wordmark name="Secretária Digital" size={19} /></div>
+        <button type="button" className="sd-client-login-back sd-btn" onClick={onBack}><ArrowLeft size={16} /> <span>Voltar ao site</span></button>
+      </header>
 
-        {error === "email_not_confirmed" ? (
-          <div className="pop-in" style={{ background: COLORS.amberSoft, color: "#7A5610", borderRadius: 12, padding: "12px 13px", fontSize: 12.5, marginBottom: 14, lineHeight: 1.5 }}>
-            Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada (e o spam).
-            {resent ? (
-              <div style={{ marginTop: 8, fontWeight: 700 }}>E-mail reenviado ✅</div>
-            ) : (
-              <button onClick={resend} disabled={resending || !email} className="font-body sd-btn" style={{
-                marginTop: 8, background: "none", border: "none", color: "#7A5610", fontWeight: 700, fontSize: 12.5,
-                cursor: "pointer", textDecoration: "underline", padding: 0,
-              }}>
-                {resending ? "Reenviando..." : "Reenviar e-mail de confirmação"}
-              </button>
-            )}
+      <main className="sd-client-login-main">
+        <section className="sd-client-login-welcome" aria-labelledby="sd-welcome-title">
+          <div className="sd-client-login-welcome-top">
+            <div className="sd-client-login-welcome-tag"><Sparkles size={14} /> SEU ESPAÇO, SEU MOMENTO</div>
+            <h1 id="sd-welcome-title" className="font-display">Que bom ter você <span className="font-display-italic">de volta.</span></h1>
+            <p>Seu cantinho de organização está prontinho para receber você. Continue de onde parou e cuide do seu negócio com mais tranquilidade.</p>
           </div>
-        ) : (
-          <ErrorBanner message={error} />
-        )}
+          <div className="sd-client-login-welcome-bottom">
+            <div className="sd-client-login-ornament">✦</div>
+            <div className="sd-client-login-quote font-display-italic">Cada detalhe do seu trabalho merece cuidado. Inclusive você.</div>
+            <div className="sd-client-login-quote-rule" />
+            <span>SECRETÁRIA DIGITAL</span>
+          </div>
+        </section>
 
-        <form onSubmit={(e) => { e.preventDefault(); onLogin(email, senha); }} style={{ display: "flex", flexDirection: "column", gap: 11 }}>
-          <input placeholder="E-mail" type="email" style={fieldStyle} value={email} onChange={e => setEmail(e.target.value)} />
-          <input placeholder="Senha" type="password" style={fieldStyle} value={senha} onChange={e => setSenha(e.target.value)} />
-          <PrimaryButton type="submit" loading={loading} style={{ width: "100%", marginTop: 6 }}>
-            Entrar <ChevronRight size={15} />
-          </PrimaryButton>
-        </form>
-        <div style={{ textAlign: "center", marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
-          <button onClick={() => onForgotPassword(email)} className="font-body sd-btn" style={{ background: "none", border: "none", color: COLORS.inkSoft, fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
-            Esqueci minha senha
-          </button>
-          <button onClick={onGoSignup} className="font-body sd-btn" style={{ background: "none", border: "none", color: COLORS.primary, fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
-            Ainda não tem conta? Criar agora
-          </button>
-          <button onClick={onBack} className="font-body sd-btn" style={{ background: "none", border: "none", color: COLORS.inkFaint, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-            ← Voltar
-          </button>
-        </div>
-      </Card>
+        <section className="sd-client-login-content" aria-labelledby="sd-login-title">
+          <div className="sd-client-login-content-top">
+            <div className="sd-client-login-welcome-mobile"><Sparkles size={16} /> Que alegria receber você novamente!</div>
+            <div className="sd-client-login-kicker">ÁREA EXCLUSIVA DA CLIENTE</div>
+            <h2 className="font-display" id="sd-login-title">Entre no seu <span className="font-display-italic">espaço.</span></h2>
+            <p>Acesse seu painel para organizar a agenda, seus clientes e tudo o que faz seu negócio acontecer.</p>
+          </div>
+
+          {error === "email_not_confirmed" ? (
+            <div className="pop-in sd-client-login-alert">
+              Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada (e o spam).
+              {resent ? (
+                <div style={{ marginTop: 8, fontWeight: 700 }}>E-mail reenviado.</div>
+              ) : (
+                <button type="button" onClick={resend} disabled={resending || !email} className="sd-client-login-resend">
+                  {resending ? "Reenviando..." : "Reenviar e-mail de confirmação"}
+                </button>
+              )}
+            </div>
+          ) : (
+            <ErrorBanner message={error} />
+          )}
+
+          <form className="sd-client-login-form" onSubmit={e => { e.preventDefault(); onLogin(email, senha); }}>
+            <div className="sd-client-login-field">
+              <label htmlFor="sd-client-email">Seu e-mail</label>
+              <input id="sd-client-email" name="email" type="email" placeholder="voce@exemplo.com" autoComplete="username" required
+                value={email} onChange={e => setEmail(e.target.value)} />
+            </div>
+            <div className="sd-client-login-field">
+              <div className="sd-client-login-field-head">
+                <label htmlFor="sd-client-password">Sua senha</label>
+                <button type="button" onClick={() => onForgotPassword(email)} className="sd-client-login-forgot">Esqueci minha senha</button>
+              </div>
+              <div className="sd-client-login-password-wrap">
+                <input id="sd-client-password" name="password" type={showPassword ? "text" : "password"} placeholder="Digite sua senha"
+                  autoComplete="current-password" required value={senha} onChange={e => setSenha(e.target.value)} />
+                <button className="sd-client-login-reveal" type="button" onClick={() => setShowPassword(v => !v)}
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} aria-pressed={showPassword}>
+                  {showPassword ? "Ocultar" : "Mostrar"}
+                </button>
+              </div>
+            </div>
+            <PrimaryButton type="submit" loading={loading} style={{ width: "100%", marginTop: 5, padding: "15px 22px", fontSize: 14.5 }}>
+              Acessar meu painel <ChevronRight size={17} />
+            </PrimaryButton>
+          </form>
+
+          <div className="sd-client-login-separator"><span>É sua primeira visita?</span></div>
+          <button type="button" className="sd-client-login-create sd-btn" onClick={onGoSignup}>Criar minha conta <ChevronRight size={15} /></button>
+
+          <div className="sd-client-login-shortcut">
+            <span className="sd-client-login-shortcut-icon"><LayoutGrid size={16} /></span>
+            <p><strong>Seu acesso sempre à mão.</strong> Salve esta página na tela de início do celular para voltar diretamente aqui.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer className="sd-client-login-footer">Secretária Digital <span>✦</span> Mais leveza para a sua rotina.</footer>
     </div>
   );
 }
@@ -4751,6 +4892,7 @@ export default function App() {
   const urlParams = useMemo(() => new URLSearchParams(window.location.search), []);
   const urlToken = urlParams.get("token");
   const urlEstab = urlParams.get("estab");
+  const urlLogin = urlParams.get("entrar") === "1";
 
   // Supabase redireciona o link de "esqueci minha senha" com
   // #access_token=...&type=recovery na URL (hash, não query string).
@@ -4758,8 +4900,33 @@ export default function App() {
   const recoveryToken = hashParams.get("type") === "recovery" ? hashParams.get("access_token") : null;
 
   const [view, setView] = useState(
-    recoveryToken ? "reset-password" : urlToken ? "confirm" : urlEstab ? "client-public" : "landing"
+    recoveryToken ? "reset-password" : urlToken ? "confirm" : urlEstab ? "client-public" : urlLogin ? "login" : "landing"
   );
+
+  // O atalho de tela inicial mantém ?entrar=1 para reabrir esta tela de boas-vindas.
+  function goToLogin() {
+    const nextUrl = new URL(window.location.href);
+    if (!nextUrl.searchParams.has("token") && !nextUrl.searchParams.has("estab")) {
+      nextUrl.searchParams.set("entrar", "1");
+      window.history.replaceState(window.history.state, "", nextUrl.toString());
+    }
+    setView("login");
+    window.scrollTo(0, 0);
+  }
+  function goToLanding() {
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.delete("entrar");
+    window.history.replaceState(window.history.state, "", nextUrl.toString());
+    setView("landing");
+    window.scrollTo(0, 0);
+  }
+  function goToSignup() {
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.delete("entrar");
+    window.history.replaceState(window.history.state, "", nextUrl.toString());
+    setView("signup");
+    window.scrollTo(0, 0);
+  }
 
   // Sessão (em memória — sem localStorage, conforme restrição do ambiente)
   const [session, setSession] = useState(null); // { accessToken, userId }
@@ -4953,7 +5120,7 @@ export default function App() {
     setData(emptyData);
     setClientPreview(false);
     clearPersistedSession();
-    setView("landing");
+    setView(window.location.search.includes("entrar=1") ? "login" : "landing");
   }
 
   /* ---------------- Super Admin: sessão e dados ---------------- */
@@ -5409,17 +5576,17 @@ export default function App() {
 
   let body;
   if (view === "landing") {
-    body = <Landing onCreateAccount={() => setView("signup")} onEnter={() => setView("login")} onSuperAdmin={() => setView("superadmin-login")} />;
+    body = <Landing onCreateAccount={goToSignup} onEnter={goToLogin} onSuperAdmin={() => setView("superadmin-login")} />;
   } else if (view === "login") {
     body = (
       <LoginForm
         loading={authLoading} error={authError} onLogin={handleLogin}
-        onBack={() => setView("landing")} onGoSignup={() => setView("signup")}
+        onBack={goToLanding} onGoSignup={goToSignup}
         onForgotPassword={handleForgotPassword} onResendConfirmation={handleResendConfirmation}
       />
     );
   } else if (view === "signup") {
-    body = <Signup loading={authLoading} error={authError} onCreate={handleSignup} onBack={() => setView("landing")} onGoLogin={() => setView("login")} />;
+    body = <Signup loading={authLoading} error={authError} onCreate={handleSignup} onBack={goToLanding} onGoLogin={goToLogin} />;
   } else if (view === "superadmin-login") {
     body = (
       <SuperAdminLogin
